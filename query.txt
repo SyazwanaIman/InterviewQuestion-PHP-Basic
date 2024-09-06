@@ -1,0 +1,40 @@
+// a)
+UPDATE employee_job_table
+SET job_id = 4, effective_date = '2020-01-01'
+WHERE employee_id = (
+    SELECT employee_id
+    FROM employee_profile_table
+    WHERE employee_no = 1002
+);
+
+
+// b)
+SELECT eprofile.employee_name, eprofile.employee_no, ejob.effective_date, jprofile.job_name
+FROM employee_job_table ejob
+JOIN employee_profile_table eprofile 
+    ON ejob.employee_id = eprofile.employee_id
+JOIN job_profile_table jprofile 
+    ON ejob.job_id = jprofile.job_id;
+
+
+// c)
+SELECT eprofile.employee_name, eprofile.employee_no, jprofile.job_name
+FROM employee_job_table ejob
+JOIN employee_profile_table eprofile 
+    ON ejob.employee_id = eprofile.employee_id
+JOIN job_profile_table jprofile 
+    ON ejob.job_id = jprofile.job_id
+WHERE ejob.effective_date = (
+    SELECT MAX(effective_date) 
+    FROM employee_job_table 
+    WHERE employee_id = ejob.employee_id
+);
+
+// d)
+DELETE FROM employee_job_table
+WHERE employee_id = (
+    SELECT employee_id 
+    FROM employee_profile_table 
+    WHERE employee_no = 1000
+)
+AND effective_date = '2020-01-01';
